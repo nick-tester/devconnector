@@ -1,4 +1,5 @@
-const express = require("express");
+import express from "express";
+
 const router = express.Router();
 
 // @route   GET api/auth
@@ -6,4 +7,4 @@ const router = express.Router();
 // @access  Public
 router.get("/", (req, res) => res.send("auth route"))
 
-module.exports = router;
+export default router;

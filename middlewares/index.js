@@ -1,5 +1,5 @@
-const { userRegisterValidators } = require("./validators");
+import { userRegisterValidators } from "./validators.js";
 
-module.exports = {
+export {
     userRegisterValidators
 }

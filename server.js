@@ -1,7 +1,7 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const route = require("./routes");
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import * as route from "./routes/index.js";
 
 dotenv.config();
 
