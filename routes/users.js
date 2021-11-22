@@ -1,13 +1,17 @@
 import express from "express";
+import dotenv from "dotenv";
 import { validationResult } from "express-validator";
 import normalize from "normalize-url";
 import gravatar from "gravatar";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 import { userRegisterValidators } from "../middlewares/index.js";
 import User from "../models/User.js";
 
 const router = express.Router();
+
+dotenv.config();
 
 // @route   POST api/users
 // @desc    Register user
@@ -49,14 +53,16 @@ router.post("/", userRegisterValidators, async (req, res) => {
         const newUser = await user.save();
         
         // return jsonwebtoken
+        const payload = {
+            user: {
+                id: newUser._id,
+                name: newUser.name
+            }
+        };
         
-        if(!newUser) throw new Error("Server error");
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 });
 
-        res.status(201).json({
-            id: newUser._id,
-            name: newUser.name,
-            email: newUser.email
-        });
+        res.status(201).json(token);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server error");
