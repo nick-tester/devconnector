@@ -11,7 +11,13 @@ const userLoginValidators = [
     check("password", "Password is required.").exists()
 ];
 
+const profileCreateValidators = [
+    check("status", "Status is required.").notEmpty(),
+    check("skills", "Skills is required.").notEmpty()
+];
+
 export {
     userRegisterValidators,
-    userLoginValidators
+    userLoginValidators,
+    profileCreateValidators
 }
