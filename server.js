@@ -9,6 +9,8 @@ const app = express();
 
 connectDB();
 
+app.use(express.json({ extended: false }));
+
 app.use("/api/users", route.users);
 app.use("/api/posts", route.posts);
 app.use("/api/profile", route.profile);
