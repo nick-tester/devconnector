@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { validationResult } from "express-validator";
+import normalize from "normalize-url";
+import gravatar from "gravatar";
 
 import User from "../models/User.js";
 import auth from "../middlewares/auth.js";
@@ -15,13 +17,13 @@ dotenv.config();
 
 const router = express.Router();
 
-// @route   GET api/auth
+// @route   GET /api/auth
 // @desc    test route
 // @access  Public
 router.get("/", auth, (req, res) => res.send("auth route"));
 
 
-// @route   POST api/auth/login
+// @route   POST /api/auth/login
 // @desc    Login user and acquire token
 // @access  Public
 router.post("/login", userLoginValidators, async (req, res) => {
@@ -63,7 +65,7 @@ router.post("/login", userLoginValidators, async (req, res) => {
 });
 
 
-// @route   POST api/auth/register
+// @route   POST /api/auth/register
 // @desc    Register user
 // @access  Public
 router.post("/register", userRegisterValidators, async (req, res) => {
