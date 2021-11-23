@@ -20,11 +20,19 @@ const profileExperienceValidators = [
     check("title", "Title is required.").notEmpty(),
     check("company", "Company is required.").notEmpty(),
     check("from", "From date is required.").notEmpty()
-]
+];
+
+const profileEducationValidators = [
+    check("school", "School is required.").notEmpty(),
+    check("level", "Level is required.").notEmpty(),
+    check("fieldofstudy", "Field of study is required.").notEmpty(),
+    check("from", "From date is required.").notEmpty()
+];
 
 export {
     userRegisterValidators,
     userLoginValidators,
     profileCreateValidators,
-    profileExperienceValidators
+    profileExperienceValidators,
+    profileEducationValidators
 }
