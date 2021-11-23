@@ -16,8 +16,15 @@ const profileCreateValidators = [
     check("skills", "Skills is required.").notEmpty()
 ];
 
+const profileExperienceValidators = [
+    check("title", "Title is required.").notEmpty(),
+    check("company", "Company is required.").notEmpty(),
+    check("from", "From date is required.").notEmpty()
+]
+
 export {
     userRegisterValidators,
     userLoginValidators,
-    profileCreateValidators
+    profileCreateValidators,
+    profileExperienceValidators
 }
