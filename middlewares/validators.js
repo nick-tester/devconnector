@@ -24,7 +24,7 @@ const profileExperienceValidators = [
 
 const profileEducationValidators = [
     check("school", "School is required.").notEmpty(),
-    check("level", "Level is required.").notEmpty(),
+    check("level", "Level/Degree is required.").notEmpty(),
     check("fieldofstudy", "Field of study is required.").notEmpty(),
     check("from", "From date is required.").notEmpty()
 ];

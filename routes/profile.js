@@ -268,10 +268,13 @@ router.put("/education", [auth, profileEducationValidators], async (req, res) =>
 router.delete("/education/:edu_id", auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({ user: req.user.id });
+
         // get remove index
         const removeIndex = profile.education.map(item => item.id).indexOf(req.params.edu_id);
         profile.education.splice(removeIndex, 1);
+
         await profile.save();
+        
         res.status(200).json(profile);
     } catch (err) {
         console.error(err.message);  
