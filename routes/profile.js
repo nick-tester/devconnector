@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+import axios from "axios";
 import express from "express";
 import { validationResult } from "express-validator";
 
@@ -8,6 +10,8 @@ import {
     profileExperienceValidators,
     profileEducationValidators 
 } from "../middlewares/validators.js";
+
+dotenv.config();
 
 const router = express.Router();
 
@@ -279,6 +283,38 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
     } catch (err) {
         console.error(err.message);  
         res.status(500).send("Server error");
+    }
+});
+
+
+
+//route:        GET api/profile/github/:username
+//desc:         get user repos from github
+//access:       public
+//note:         https://api.github.com/users/nick-tester/repos?per_page=5&sort=created:asc
+router.get("/github/:username", async (req, res) => {
+    try {
+        const { username } = req.params; 
+        
+        const url = `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`;
+        
+        // encodeURI is a nodejs built-in function
+        const uri = encodeURI(url);
+            
+        const headers = {
+            "user-agent": "node.js",
+            Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`
+        };
+          
+        const requested = await axios.get(uri, { headers });
+
+        res.status(200).json(requested.data);
+    } catch (err) {
+        if (err.response.status === 404) {
+            res.status(404).json({ errors: [{ msg: "No github profile found!" }] });
+        } else {
+            res.status(500).json("Server error");
+        }
     }
 });
 
