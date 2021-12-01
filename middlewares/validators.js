@@ -29,10 +29,15 @@ const profileEducationValidators = [
     check("from", "From date is required.").notEmpty()
 ];
 
+const postValidators = [
+    check("text", "Text is required.").notEmpty()
+];
+
 export {
     userRegisterValidators,
     userLoginValidators,
     profileCreateValidators,
     profileExperienceValidators,
-    profileEducationValidators
+    profileEducationValidators,
+    postValidators
 }

@@ -8,7 +8,7 @@ import Profile from "../models/Profile.js";
 import {
     profileCreateValidators,
     profileExperienceValidators,
-    profileEducationValidators 
+    profileEducationValidators
 } from "../middlewares/validators.js";
 
 dotenv.config();
@@ -41,7 +41,7 @@ router.route("/me")
         try {
             // remove profile
             await Profile.findOneAndRemove({ user: req.user.id });
-            
+
             res.status(200).json("Successfully removed user's profile!");
         } catch (err) {
             console.error(err.message);
@@ -73,10 +73,10 @@ router.route("/")
     // @access  Private
     .post([auth, profileCreateValidators], async (req, res) => {
         const errors = validationResult(req);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array().map(error => error.msg) });
         };
-    
+
         const {
             company,
             website,
@@ -91,12 +91,12 @@ router.route("/")
             instagram,
             linkedin
         } = req.body;
-    
+
         // build profile object or initialize object
         const profileFields = {};
-    
+
         profileFields.user = req.user.id;
-    
+
         if (company) profileFields.company = company;
         if (website) profileFields.website = website;
         if (location) profileFields.location = location;
@@ -106,30 +106,30 @@ router.route("/")
         if (skills) {
             profileFields.skills = skills.split(",").map(skill => skill.trim());
         };
-    
+
         // build social object
         profileFields.social = {};
-    
+
         if (youtube) profileFields.social.youtube = youtube;
         if (twitter) profileFields.social.twitter = twitter;
         if (facebook) profileFields.social.facebook = facebook;
         if (linkedin) profileFields.social.linkedin = linkedin;
         if (instagram) profileFields.social.instagram = instagram;
-    
+
         try {
             let profile = await Profile.findOne({ user: req.user.id });
-    
+
             if (profile) {
                 //  Update profile
                 profile = await Profile.findOneAndUpdate({ user: req.user.id }, { $set: profileFields }, { new: true });
-                
+
                 return res.status(200).json(profile);
             };
-    
+
             profile = new Profile(profileFields);
-    
+
             const newProfile = await profile.save();
-    
+
             res.status(201).json(newProfile);
         } catch (err) {
             console.error(err.message);
@@ -144,11 +144,11 @@ router.route("/")
 router.get("/user/:id", async (req, res) => {
     try {
         const profile = await Profile.findOne({ user: req.params.id }).populate("user", ["name", "avatar"]);
-        
+
         if (!profile) {
             return res.status(404).json({ errors: [{ msg: "Profile not found..." }] });
         }
-        
+
         res.status(200).json(profile);
     } catch (err) {
         console.error(err.message);
@@ -165,7 +165,7 @@ router.get("/user/:id", async (req, res) => {
 // @access  Private
 router.put("/experience", [auth, profileExperienceValidators], async (req, res) => {
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array().map(error => error.msg) });
     };
 
@@ -191,11 +191,11 @@ router.put("/experience", [auth, profileExperienceValidators], async (req, res) 
 
     try {
         const profile = await Profile.findOne({ user: req.user.id });
-    
+
         profile.experience.unshift(newExp);
-    
+
         await profile.save();
-    
+
         res.status(201).json(profile.experience[0]);
     } catch (err) {
         console.error(err.message);
@@ -216,7 +216,7 @@ router.delete("/experience/:exp_id", auth, async (req, res) => {
         await profile.save();
         res.status(200).json(profile);
     } catch (err) {
-        console.error(err.message);  
+        console.error(err.message);
         res.status(500).send("Server error");
     }
 });
@@ -227,7 +227,7 @@ router.delete("/experience/:exp_id", auth, async (req, res) => {
 // @access  Private
 router.put("/education", [auth, profileEducationValidators], async (req, res) => {
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array().map(error => error.msg) });
     };
 
@@ -253,11 +253,11 @@ router.put("/education", [auth, profileEducationValidators], async (req, res) =>
 
     try {
         const profile = await Profile.findOne({ user: req.user.id });
-    
+
         profile.education.unshift(newEdu);
-    
+
         await profile.save();
-    
+
         res.status(201).json(profile.education[0]);
     } catch (err) {
         console.error(err.message);
@@ -278,10 +278,10 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
         profile.education.splice(removeIndex, 1);
 
         await profile.save();
-        
+
         res.status(200).json(profile);
     } catch (err) {
-        console.error(err.message);  
+        console.error(err.message);
         res.status(500).send("Server error");
     }
 });
@@ -294,27 +294,27 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
 //note:         https://api.github.com/users/nick-tester/repos?per_page=5&sort=created:asc
 router.get("/github/:username", async (req, res) => {
     try {
-        const { username } = req.params; 
-        
+        const { username } = req.params;
+
         const url = `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`;
-        
+
         // encodeURI is a nodejs built-in function
         const uri = encodeURI(url);
-            
+
         const headers = {
             "user-agent": "node.js",
             Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`
         };
-          
+
         const requested = await axios.get(uri, { headers });
 
         res.status(200).json(requested.data);
     } catch (err) {
-        if (err.response.status === 404) {
-            res.status(404).json({ errors: [{ msg: "No github profile found!" }] });
-        } else {
-            res.status(500).json("Server error");
+        console.log(err.message);
+        if (err.kind === "ObjectId") {
+            return res.status(404).json({ errors: [{ msg: "Github repos not found..." }] });
         }
+        res.status(500).send("Server error");
     }
 });
 
