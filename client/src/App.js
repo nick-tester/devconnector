@@ -1,8 +1,16 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import Navbar from "./layouts/Navbar";
+import LandingPage from "./pages/LandingPage";
+
 const App = () => {
     return (
-        <>
-            <h1>hello world</h1>
-        </>
+        <Router>
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<LandingPage />} exact />
+            </Routes>
+        </Router>
     )
 };
 
