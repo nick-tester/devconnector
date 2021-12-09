@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
     return (
@@ -10,8 +11,8 @@ const LandingPage = () => {
                         other developers
                     </p>
                     <div className="buttons">
-                        <a href="register.html" className="btn btn-primary">Sign Up</a>
-                        <a href="login.html" className="btn btn-light">Login</a>
+                        <Link to="/auth/signup" className="btn btn-primary">Sign Up</Link>
+                        <Link to="/auth/signin" className="btn btn-light">Login</Link>
                     </div>
                 </div>
             </div>
