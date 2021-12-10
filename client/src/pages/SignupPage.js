@@ -1,16 +1,38 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SignupPage = () => {
+    const [formData, setformData] = useState({
+        name: "",
+        email: "",
+        password: "",
+        password2: ""
+    });
+
+    const { name, email, password, password2 } = formData;
+
+    const onChangeHandler = e => setformData({ ...formData, [e.target.name]: e.target.value });
+
+    const submitHandler = e => {
+        e.preventDefault();
+
+        if (password !== password2 || !password || !password2) {
+            console.log("please review the form");
+        } else {
+            console.log(JSON.stringify(formData));
+        }
+    }
+
     return (
         <>
             <h1 className="large text-primary">Sign Up</h1>
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
-            <form className="form" action="create-profile.html">
+            <form className="form" onSubmit={submitHandler}>
                 <div className="form-group">
-                    <input type="text" placeholder="Name" name="name" required />
+                    <input type="text" placeholder="Name" name="name" value={name} onChange={onChangeHandler} required />
                 </div>
                 <div className="form-group">
-                    <input type="email" placeholder="Email Address" name="email" />
+                    <input type="email" placeholder="Email Address" name="email" value={email} onChange={onChangeHandler} />
                     <small className="form-text"
                     >This site uses Gravatar so if you want a profile image, use a
                         Gravatar email</small
@@ -21,7 +43,9 @@ const SignupPage = () => {
                         type="password"
                         placeholder="Password"
                         name="password"
+                        value={password}
                         minLength="6"
+                        onChange={onChangeHandler}
                     />
                 </div>
                 <div className="form-group">
@@ -29,10 +53,12 @@ const SignupPage = () => {
                         type="password"
                         placeholder="Confirm Password"
                         name="password2"
+                        value={password2}
                         minLength="6"
+                        onChange={onChangeHandler}
                     />
                 </div>
-                <input type="submit" className="btn btn-primary" value="Register" />
+                <button type="submit" className="btn btn-primary">Register</button>
             </form>
             <p className="my-1">
                 Already have an account? <Link to="/auth/signin">Sign In</Link>
