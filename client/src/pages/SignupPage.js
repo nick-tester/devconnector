@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
+const url = "http://localhost:5000/api/auth/register";
 
 const SignupPage = () => {
+    const [alert, setAlert] = useState(false);
     const [formData, setformData] = useState({
         name: "",
         email: "",
@@ -13,18 +17,43 @@ const SignupPage = () => {
 
     const onChangeHandler = e => setformData({ ...formData, [e.target.name]: e.target.value });
 
+    const sendData = async (formdata) => {
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+
+            const { data } = await axios.post(url, formdata, config);
+
+            console.log(data);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
     const submitHandler = e => {
         e.preventDefault();
 
         if (password !== password2 || !password || !password2) {
-            console.log("please review the form");
+            setAlert(true);
+
+            setTimeout(() => {
+                setAlert(false)
+            }, 3000);
         } else {
-            console.log(JSON.stringify(formData));
+            sendData(formData);
         }
     }
 
     return (
         <>
+            {alert && (
+                <div className="alert alert-danger">
+                    Invalid credentials
+                </div>
+            )}
             <h1 className="large text-primary">Sign Up</h1>
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
             <form className="form" onSubmit={submitHandler}>
