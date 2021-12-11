@@ -1,19 +1,40 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const url = "http://localhost:5000/api/auth/login";
 
 const SigninPage = () => {
-    const [alert, setAlert] = useState(false);
+    const [alert, setAlert] = useState({ type: "danger", show: false, msg: "" });
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
+    const [authenticated, setAuthenticated] = useState({
+        token: localStorage.getItem("token") ? JSON.parse(localStorage.getItem("token")) : null,
+        passed: localStorage.getItem("token") !== null ? true : false
+    });
+
+    const navTo = useNavigate();
 
     const { email, password } = formData;
 
     const onChangeHandler = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    const handleAlert = (type = "danger", show = false, msg = "") => {
+        setAlert({ type, show, msg });
+
+        setTimeout(() => {
+            setAlert({ type: "danger", show: false, msg: "" });
+            setFormData({ email: "", password: "" });
+        }, 3000);
+    };
+
+    useEffect(() => {
+        if (authenticated.passed) {
+            navTo("/");
+        }
+    }, [authenticated.passed, navTo]);
 
     const sendData = async (formdata) => {
         try {
@@ -25,7 +46,8 @@ const SigninPage = () => {
 
             const { data } = await axios.post(url, formdata, config);
 
-            console.log(data);
+            localStorage.setItem("token", JSON.stringify(data.token));
+            setAuthenticated({ token: data.token, passed: true });
         } catch (err) {
             console.error(err.message);
         }
@@ -35,21 +57,18 @@ const SigninPage = () => {
         e.preventDefault();
 
         if (!password || !email) {
-            setAlert(true);
-
-            setTimeout(() => {
-                setAlert(false)
-            }, 3000);
+            handleAlert("danger", true, "Invalid Credentials!");
         } else {
             sendData(formData);
+            handleAlert("success", true, "Success!")
         }
     };
 
     return (
         <>
-            {alert && (
-                <div className="alert alert-danger">
-                    Invalid credentials
+            {alert.show && (
+                <div className={`alert alert-${alert.type}`}>
+                    {alert.msg}
                 </div>
             )}
             <h1 className="large text-primary">Sign In</h1>
@@ -62,7 +81,6 @@ const SigninPage = () => {
                         name="email"
                         value={email}
                         onChange={onChangeHandler}
-                        required
                     />
                 </div>
                 <div className="form-group">

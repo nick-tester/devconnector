@@ -5,7 +5,7 @@ import axios from "axios";
 const url = "http://localhost:5000/api/auth/register";
 
 const SignupPage = () => {
-    const [alert, setAlert] = useState(false);
+    const [alert, setAlert] = useState({ type: "danger", show: false, msg: "" });
     const [formData, setformData] = useState({
         name: "",
         email: "",
@@ -16,6 +16,15 @@ const SignupPage = () => {
     const { name, email, password, password2 } = formData;
 
     const onChangeHandler = e => setformData({ ...formData, [e.target.name]: e.target.value });
+
+    const handleAlert = (type = "danger", show = false, msg = "") => {
+        setAlert({ type, show, msg });
+
+        setTimeout(() => {
+            setAlert({ type: "danger", show: false, msg: "" });
+            setformData({ name: "", email: "", password: "", password2: "" });
+        }, 3000);
+    };
 
     const sendData = async (formdata) => {
         try {
@@ -28,8 +37,9 @@ const SignupPage = () => {
             const { data } = await axios.post(url, formdata, config);
 
             console.log(data);
+            handleAlert("danger", true, "Success!");
         } catch (err) {
-            console.error(err.message);
+            handleAlert("danger", true, "Server Error!");
         }
     }
 
@@ -37,10 +47,10 @@ const SignupPage = () => {
         e.preventDefault();
 
         if (password !== password2 || !password || !password2) {
-            setAlert(true);
+            handleAlert("danger", true, "Invalid Credentials!");
 
             setTimeout(() => {
-                setAlert(false)
+                handleAlert();
             }, 3000);
         } else {
             sendData(formData);
@@ -49,16 +59,16 @@ const SignupPage = () => {
 
     return (
         <>
-            {alert && (
-                <div className="alert alert-danger">
-                    Invalid credentials
+            {alert.show && (
+                <div className={`alert alert-${alert.type}`}>
+                    {alert.msg}
                 </div>
             )}
             <h1 className="large text-primary">Sign Up</h1>
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
             <form className="form" onSubmit={submitHandler}>
                 <div className="form-group">
-                    <input type="text" placeholder="Name" name="name" value={name} onChange={onChangeHandler} required />
+                    <input type="text" placeholder="Name" name="name" value={name} onChange={onChangeHandler} />
                 </div>
                 <div className="form-group">
                     <input type="email" placeholder="Email Address" name="email" value={email} onChange={onChangeHandler} />
