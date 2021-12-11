@@ -6,10 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "concurrently \"npm run server\" \"npm run sass\" \"npm run client\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon server.js",
-    "client": "cd client && npm start",
-    "sass": "cd client && npm run compile:sass"
+    "client": "cd client && npm start"
   },
   "keywords": [],
   "author": "Romenick Tester",

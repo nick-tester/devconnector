@@ -1,7 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
+
 import connectDB from "./config/db.js";
 import * as route from "./routes/index.js";
+import setHeaders from "./middlewares/setheaders.js";
 
 dotenv.config();
 
@@ -9,7 +11,8 @@ const app = express();
 
 connectDB();
 
-app.use(express.json({ extended: false }));
+app.use(express.json({ extended: true }));
+app.use(setHeaders);
 
 app.use("/api/users", route.users);
 app.use("/api/posts", route.posts);

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
+const url = "http://localhost:5000/api/auth/login";
 
 const SigninPage = () => {
     const [alert, setAlert] = useState(false);
@@ -12,6 +15,22 @@ const SigninPage = () => {
 
     const onChangeHandler = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    const sendData = async (formdata) => {
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+
+            const { data } = await axios.post(url, formdata, config);
+
+            console.log(data);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
     const submitHandler = e => {
         e.preventDefault();
 
@@ -22,9 +41,9 @@ const SigninPage = () => {
                 setAlert(false)
             }, 3000);
         } else {
-            console.log(JSON.stringify(formData));
+            sendData(formData);
         }
-    }
+    };
 
     return (
         <>
