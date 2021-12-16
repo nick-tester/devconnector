@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+    const isAuthenticated = localStorage.getItem("token") ? true : false;
+
+    const logoutHandler = () => {
+        localStorage.removeItem("token");
+    }
+
     return (
         <nav className="navbar bg-dark">
             <h1>
@@ -9,7 +15,11 @@ const Navbar = () => {
             <ul>
                 <li><Link to="/profiles">Developers</Link></li>
                 <li><Link to="/auth/signup">Register</Link></li>
-                <li><Link to="/auth/signin">Login</Link></li>
+                {isAuthenticated ? (
+                    <li><Link to="/auth/signin" onClick={logoutHandler}>Logout</Link></li>
+                ) : (
+                    <li><Link to="/auth/signin">Login</Link></li>
+                )}
             </ul>
         </nav>
     )
