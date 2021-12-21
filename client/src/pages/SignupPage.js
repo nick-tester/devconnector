@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { useDispatch } from "react-redux";
 
-const url = "http://localhost:5000/api/auth/register";
+import { setAlert } from "../assets/reducers/alert_actions";
 
 const SignupPage = () => {
-    const [alert, setAlert] = useState({ type: "danger", show: false, msg: "" });
     const [formData, setformData] = useState({
         name: "",
         email: "",
@@ -15,55 +14,22 @@ const SignupPage = () => {
 
     const { name, email, password, password2 } = formData;
 
+    const dispatch = useDispatch();
+
     const onChangeHandler = e => setformData({ ...formData, [e.target.name]: e.target.value });
-
-    const handleAlert = (type = "danger", show = false, msg = "") => {
-        setAlert({ type, show, msg });
-
-        setTimeout(() => {
-            setAlert({ type: "danger", show: false, msg: "" });
-            setformData({ name: "", email: "", password: "", password2: "" });
-        }, 3000);
-    };
-
-    const sendData = async (formdata) => {
-        try {
-            const config = {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }
-
-            const { data } = await axios.post(url, formdata, config);
-
-            console.log(data);
-            handleAlert("danger", true, "Success!");
-        } catch (err) {
-            handleAlert("danger", true, "Server Error!");
-        }
-    }
 
     const submitHandler = e => {
         e.preventDefault();
 
         if (password !== password2 || !password || !password2) {
-            handleAlert("danger", true, "Invalid Credentials!");
-
-            setTimeout(() => {
-                handleAlert();
-            }, 3000);
+            dispatch(setAlert("Please revise passwords", "danger"));
         } else {
-            sendData(formData);
+            console.log(formData);
         }
     }
 
     return (
         <>
-            {alert.show && (
-                <div className={`alert alert-${alert.type}`}>
-                    {alert.msg}
-                </div>
-            )}
             <h1 className="large text-primary">Sign Up</h1>
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
             <form className="form" onSubmit={submitHandler}>
