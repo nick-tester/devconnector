@@ -1,43 +1,50 @@
 import {
-    AUTH_REG_REQUEST,
-    AUTH_REG_SUCCESS,
-    AUTH_REG_ERROR
+    AUTH_SIGNUP_REQUEST,
+    AUTH_SIGNUP_SUCCESS,
+    AUTH_SIGNUP_ERROR,
+    AUTH_SIGNIN_REQUEST,
+    AUTH_SIGNIN_SUCCESS,
+    AUTH_SIGNIN_ERROR,
+    AUTH_USER_DETAILS,
+    AUTH_USER_LOGOUT
 } from "./auth_constants";
 
 const initialState = {
     loading: false,
-    token: localStorage.getItem("token") ? JSON.parse(localStorage.getItem("token")) : null,
+    token: null,
     isAuthenticated: null,
     user: null
 };
 
-const registerReducer = (state = initialState, action) => {
+const authReducers = (state = initialState, action) => {
     const { type, payload } = action;
 
     switch (type) {
-        case AUTH_REG_REQUEST:
+        case AUTH_SIGNUP_REQUEST:
+        case AUTH_SIGNIN_REQUEST:
             return { ...state, loading: true };
 
-        case AUTH_REG_SUCCESS:
+        case AUTH_SIGNUP_SUCCESS:
+        case AUTH_SIGNIN_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                isAuthenticated: true,
-                token: localStorage.setItem("token", JSON.stringify(payload.token)),
-                user: payload.user
+                token: payload,
+                isAuthenticated: true
             };
 
-        case AUTH_REG_ERROR:
+        case AUTH_USER_DETAILS:
+            return { ...state, user: payload };
+
+        case AUTH_SIGNUP_ERROR:
+        case AUTH_SIGNIN_ERROR:
+        case AUTH_USER_LOGOUT:
             localStorage.removeItem("token");
-            return { ...state, loading: false };
+            return { ...state, loading: false, isAuthenticated: false };
 
         default:
             return state;
     }
 };
-
-const authReducers = {
-    register: registerReducer
-}
 
 export default authReducers;

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { setAlert } from "../assets/reducers/alert_actions";
+import { login } from "../assets/reducers/auth_actions";
 
 const SigninPage = () => {
     const [formData, setFormData] = useState({ email: "", password: "" });
@@ -20,7 +21,7 @@ const SigninPage = () => {
         if (!password || !email) {
             dispatch(setAlert("Invalid credentials", "danger"));
         } else {
-            console.log(formData);
+            dispatch(login({ email: formData.email, password: formData.password }))
         }
     };
 

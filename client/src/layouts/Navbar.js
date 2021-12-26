@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { logout } from "../assets/reducers/auth_actions";
 
 const Navbar = () => {
-    const isAuthenticated = localStorage.getItem("token") ? true : false;
+    const dispatch = useDispatch();
 
-    const logoutHandler = () => {
-        localStorage.removeItem("token");
+    const { isAuthenticated } = useSelector(state => state.auth);
+
+    function logoutHandler() {
+        dispatch(logout());
     }
 
     return (

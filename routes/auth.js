@@ -57,7 +57,7 @@ router.post("/login", userLoginValidators, async (req, res) => {
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 });
 
-        res.status(200).json({ token });
+        res.status(200).json(token);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server error");
@@ -114,7 +114,7 @@ router.post("/register", userRegisterValidators, async (req, res) => {
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 });
 
-        res.status(201).json({ token, user: { name: newUser.name, email: newUser.email } });
+        res.status(201).json(token);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server error");
