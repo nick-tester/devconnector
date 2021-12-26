@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { setAlert } from "../assets/reducers/alert_actions";
+import { register } from "../assets/reducers/auth_actions";
 
 const SignupPage = () => {
     const [formData, setformData] = useState({
@@ -24,7 +25,7 @@ const SignupPage = () => {
         if (password !== password2 || !password || !password2) {
             dispatch(setAlert("Please revise passwords", "danger"));
         } else {
-            console.log(formData);
+            dispatch(register({ name, email, password }));
         }
     }
 

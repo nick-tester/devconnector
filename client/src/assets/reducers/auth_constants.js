@@ -1,0 +1,3 @@
+export const AUTH_REG_REQUEST = "AUTH_REG_REQUEST";
+export const AUTH_REG_SUCCESS = "AUTH_REG_SUCCESS";
+export const AUTH_REG_ERROR = "AUTH_REG_ERROR";

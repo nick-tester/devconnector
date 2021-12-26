@@ -9,8 +9,8 @@ import gravatar from "gravatar";
 import User from "../models/User.js";
 import auth from "../middlewares/auth.js";
 import {
-    userRegisterValidators, 
-    userLoginValidators 
+    userRegisterValidators,
+    userLoginValidators
 } from "../middlewares/validators.js";
 
 dotenv.config();
@@ -28,7 +28,7 @@ router.get("/", auth, (req, res) => res.send("auth route"));
 // @access  Public
 router.post("/login", userLoginValidators, async (req, res) => {
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array().map(error => error.msg) });
     };
 
@@ -40,9 +40,9 @@ router.post("/login", userLoginValidators, async (req, res) => {
         if (!user) {
             return res.status(400).json({ errors: [{ msg: "Invalid credentials!" }] });
         };
-        
+
         const passwordMatch = await bcrypt.compare(password, user.password);
-        
+
         if (!passwordMatch) {
             return res.status(400).json({ errors: [{ msg: "Invalid credentials!" }] });
         };
@@ -54,10 +54,10 @@ router.post("/login", userLoginValidators, async (req, res) => {
                 name: user.name
             }
         };
-        
+
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 });
 
-        res.status(200).json({token});
+        res.status(200).json({ token });
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server error");
@@ -70,18 +70,18 @@ router.post("/login", userLoginValidators, async (req, res) => {
 // @access  Public
 router.post("/register", userRegisterValidators, async (req, res) => {
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array().map(error => error.msg) });
     };
-    
+
     const { name, email, password } = req.body;
-    
+
     try {
-        
+
         // see if user exists
         let user = await User.findOne({ email });
 
-        if(user) {
+        if (user) {
             return res.status(400).json({ errors: [{ msg: "User already exist!" }] });
         };
 
@@ -95,15 +95,15 @@ router.post("/register", userRegisterValidators, async (req, res) => {
         user = new User({
             name, email, avatar, password
         });
-        
+
         // encrypt password
         const salt = await bcrypt.genSalt(10);
 
         user.password = await bcrypt.hash(password, salt);
-        
+
         // save user
         const newUser = await user.save();
-        
+
         // return jsonwebtoken
         const payload = {
             user: {
@@ -111,10 +111,10 @@ router.post("/register", userRegisterValidators, async (req, res) => {
                 name: newUser.name
             }
         };
-        
+
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 });
 
-        res.status(201).json({token});
+        res.status(201).json({ token, user: { name: newUser.name, email: newUser.email } });
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server error");
