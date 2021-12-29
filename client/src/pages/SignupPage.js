@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { setAlert } from "../assets/reducers/alert_actions";
 import { register } from "../assets/reducers/auth_actions";
@@ -15,7 +15,17 @@ const SignupPage = () => {
 
     const { name, email, password, password2 } = formData;
 
+    const navTo = useNavigate();
+
     const dispatch = useDispatch();
+
+    const { isAuthenticated } = useSelector(state => state.auth);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navTo("/auth/dashboard");
+        }
+    }, [isAuthenticated, navTo])
 
     const onChangeHandler = e => setformData({ ...formData, [e.target.name]: e.target.value });
 

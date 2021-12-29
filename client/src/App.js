@@ -8,6 +8,8 @@ import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
 import SignupPage from "./pages/SignupPage";
 import SigninPage from "./pages/SigninPage";
+import DashboardPage from "./pages/DashboardPage";
+import ProfilesPage from "./pages/ProfilesPage";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -28,7 +30,9 @@ const App = () => {
                 <Route path="/auth" element={<AuthPage />}>
                     <Route path="signin" element={<SigninPage />} />
                     <Route path="signup" element={<SignupPage />} />
+                    <Route path="dashboard" element={<DashboardPage />} />
                 </Route>
+                <Route path="/profiles" element={<ProfilesPage />} />
             </Routes>
         </Router>
     )

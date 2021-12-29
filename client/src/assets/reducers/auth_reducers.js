@@ -40,7 +40,13 @@ const authReducers = (state = initialState, action) => {
         case AUTH_SIGNIN_ERROR:
         case AUTH_USER_LOGOUT:
             localStorage.removeItem("token");
-            return { ...state, loading: false, isAuthenticated: false };
+            return {
+                ...state,
+                loading: false,
+                token: null,
+                isAuthenticated: false,
+                user: {}
+            };
 
         default:
             return state;

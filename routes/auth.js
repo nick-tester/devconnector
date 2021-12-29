@@ -60,7 +60,7 @@ router.post("/login", userLoginValidators, async (req, res) => {
         res.status(200).json(token);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).json({ errors: [{ msg: "Server error" }] });
     }
 });
 
@@ -117,7 +117,7 @@ router.post("/register", userRegisterValidators, async (req, res) => {
         res.status(201).json(token);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).json({ errors: [{ msg: "Server error" }] });
     }
 });
 

@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { setAlert } from "../assets/reducers/alert_actions";
 import { login } from "../assets/reducers/auth_actions";
@@ -9,7 +9,17 @@ const SigninPage = () => {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const { email, password } = formData;
 
+    const navTo = useNavigate();
+
     const dispatch = useDispatch();
+
+    const { isAuthenticated } = useSelector(state => state.auth);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navTo("/auth/dashboard")
+        }
+    }, [isAuthenticated, navTo]);
 
     function onChangeHandler(e) {
         setFormData({ ...formData, [e.target.name]: e.target.value });

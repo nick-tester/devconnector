@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { FaSignOutAlt, FaUser, FaSign, FaSignInAlt } from "react-icons/fa";
 
 import { logout } from "../assets/reducers/auth_actions";
 
 const Navbar = () => {
     const dispatch = useDispatch();
 
-    const { isAuthenticated } = useSelector(state => state.auth);
+    const { isAuthenticated, user } = useSelector(state => state.auth);
 
     function logoutHandler() {
         dispatch(logout());
@@ -19,11 +20,36 @@ const Navbar = () => {
             </h1>
             <ul>
                 <li><Link to="/profiles">Developers</Link></li>
-                <li><Link to="/auth/signup">Register</Link></li>
                 {isAuthenticated ? (
-                    <li><Link to="/auth/signin" onClick={logoutHandler}>Logout</Link></li>
+                    <>
+                        <li>
+                            <Link to="/auth/dashboard">
+                                <span className="hide-sm"></span>{user ? user.name : "User"}
+                                <FaUser />
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/auth/signin" onClick={logoutHandler}>
+                                <span className="hide-sm">Logout</span>
+                                <FaSignOutAlt />
+                            </Link>
+                        </li>
+                    </>
                 ) : (
-                    <li><Link to="/auth/signin">Login</Link></li>
+                    <>
+                        <li>
+                            <Link to="/auth/signup">
+                                <span className="hide-sm">Register</span>
+                                <FaSign />
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/auth/signin">
+                                <span className="hide-sm">Login</span>
+                                <FaSignInAlt />
+                            </Link>
+                        </li>
+                    </>
                 )}
             </ul>
         </nav>
