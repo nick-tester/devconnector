@@ -10,6 +10,7 @@ import SignupPage from "./pages/SignupPage";
 import SigninPage from "./pages/SigninPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProfilesPage from "./pages/ProfilesPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const App = () => {
                     <Route path="dashboard" element={<DashboardPage />} />
                 </Route>
                 <Route path="/profiles" element={<ProfilesPage />} />
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>
     )
