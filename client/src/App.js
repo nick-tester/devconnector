@@ -15,7 +15,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 const App = () => {
     const dispatch = useDispatch();
 
-    const { token } = useSelector(state => state.auth);
+    const { token, isAuthenticated } = useSelector(state => state.auth);
 
     useEffect(() => {
         if (token) {
@@ -31,8 +31,12 @@ const App = () => {
                 <Route path="/auth" element={<AuthPage />}>
                     <Route path="signin" element={<SigninPage />} />
                     <Route path="signup" element={<SignupPage />} />
-                    <Route path="dashboard" element={<DashboardPage />} />
                 </Route>
+                {isAuthenticated && (
+                    <>
+                        <Route path="dashboard" element={<DashboardPage />} />
+                    </>
+                )}
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>

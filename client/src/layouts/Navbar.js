@@ -26,7 +26,7 @@ const Navbar = () => {
                 {isAuthenticated ? (
                     <>
                         <li>
-                            <Link to="/auth/dashboard">
+                            <Link to="/dashboard">
                                 <span className="hide-lg" title="user"><FaUser /></span>
                                 <span className="hide-sm"> {user ? user.name : "user"}</span>
                             </Link>

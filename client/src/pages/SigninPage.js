@@ -17,7 +17,7 @@ const SigninPage = () => {
 
     useEffect(() => {
         if (isAuthenticated) {
-            navTo("/auth/dashboard")
+            navTo("/dashboard")
         }
     }, [isAuthenticated, navTo]);
 
